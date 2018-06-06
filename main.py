@@ -1,16 +1,50 @@
 from flask import Flask, render_template, request
 import sqlite3 as sql
+import os
 app = Flask(__name__)
 
 import sqlite3
 
-conn = sqlite3.connect('database.db')
+conn = sqlite3.connect('Quiz1Stu.db')
 # print("Opened database successfully")
 
-# conn.execute('CREATE TABLE students (name TEXT, addr TEXT, city TEXT, pin TEXT)')
+# conn.execute('CREATE TABLE SchoolRecHarsh (ID VARCHAR,Days VARCHAR,Start VARCHAR,End VARCHAR,Approval VARCHAR,Max VARCHAR,Current VARCHAR,Seats VARCHAR,Wait VARCHAR,Instructor VARCHAR,Course VARCHAR,Section VARCHAR)')
 # print("Table created successfully")
 # conn.close()
+import csv
+APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+@app.route("/upload", methods=['POST'])
+def upload():
+    target = os.path.join(APP_ROOT, '/')
+    print('target')
+    print(target)
 
+    if not os.path.isdir(target):
+        os.mkdir(target)
+
+    for file in request.files.getlist("file"):        
+        filename = file.filename        
+        with open('classes.csv') as csvfile:
+              readCSV = csv.reader(csvfile, delimiter=',')
+              for row in readCSV:
+                ID = row[0]
+                Days =row[1]
+                Start =row[2]
+                End =row[3]
+                Approval =row[4]
+                Approval =row[5]
+                Max =row[6]
+                Current =row[7]
+                Seats =row[8]
+                Wait =row[9]
+                Instructor =row[10]
+                Course =row[11]
+                Section =row[12]
+                con = sql.connect("Quiz1Stu.db")
+                cur = con.cursor()
+                cur.execute("INSERT INTO SchoolRecHarsh (ID,Days,Start,End,Approval,Max,Current,Seats,Wait,Instructor,Course,Section) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",(ID,Days,Start,End,Approval,Max,Current,Seats,Wait,Instructor,Course,Section))
+                con.commit()
+        return render_template('home.html')
 
 @app.route('/')
 def home():
@@ -54,6 +88,19 @@ def list():
    
    rows = cur.fetchall();
    return render_template("list.html",rows = rows)
+
+@app.route('/Instructors', methods=['POST'])
+def Instructors():
+    Course= request.form['Course']
+    Days= request.form['Days']  
+    con = sql.connect("Quiz1Stu.db") 
+    con.row_factory = sql.Row
+    cur = con.cursor()
+    cur.execute('SELECT Instructor FROM SchoolRecHarsh where Course like \'%'+Course+'%\' AND Days like \'%'+Days+'%\';') 
+    # cur.execute('SELECT Instructor FROM SchoolRecHarsh where Course like \'%'+Course+'%\';')
+    rows = cur.fetchall() 
+    # return vehicleName
+    return render_template('list.html', rows=rows)
 
 if __name__ == '__main__':
    app.run(debug = True)
