@@ -3,15 +3,24 @@
 	<body>
 
 		<center>
-		<header> <h1> Harshini - 1001586563 </h1> </header>
+		<header> <h1> Harshini - 6563 </h1> </header>
 		<header> <h1> Home </h1> </header>
 		<br> <br>
 		<h2> This portal records the details of school</h2>
 		<br>
 		<br> <br>
-		<img src="me.jpg" alt="Smiley face" height="42" width="42">
-		 <h2><a href = "/Instructors">List of instructors</a></h2>
-	      </img>
+		 <h3>Enter Student Course Number ANd Day of the week</h3>
+		  <form action="{{url_for('Instructors')}}" method="POST" enctype="multipart/form-data">
+	      <input type="text" value="" name="Course" placeholder="Course">
+	       <!-- <input type="text" value="" name="Days" placeholder="Day"> -->
+	      <input type="submit" value="Search">
+
+	      <form action="{{url_for('upload')}}" method="POST" enctype="multipart/form-data">
+	      <strong>Files:</strong><br>
+    	  <input id="file-picker" type="file" name="file" accept="image/*" multiple>
+    	  <div id="msg"></div>
+    	  <input type="submit" value="Upload!" id="upload-button">
+	      
       </form>
 
 	</body>
